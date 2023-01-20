@@ -1,9 +1,10 @@
 // 登录模块
 import { makeAutoObservable } from "mobx"
-import { http } from '@/utils'
+import { http, setToken, getToken, clearToken } from '@/utils'
+
 
 class LoginStore {
-    token = ''
+    token = getToken() || ''
     constructor() {
         // 响应式
         makeAutoObservable(this)
@@ -16,6 +17,8 @@ class LoginStore {
         })
         // 存入token
         this.token = res.data.token
+        // 存入local storage
+        setToken(res.data.token)
     }
 }
 export default LoginStore
