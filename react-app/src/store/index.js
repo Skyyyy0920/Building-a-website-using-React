@@ -3,18 +3,19 @@
 
 import React from "react";
 import LoginStore from "./loginStore";
+import UserStore from "./userStore";
 
 class RootStore {
+    // 组合模块
     constructor() {
         this.loginStore = new LoginStore()
+        this.userStore = new UserStore()
     }
 }
 
 // 实例化根
 // 导出 useStore context
-const rootStore = new RootStore()
-const context = React.createContext(rootStore)
-
+const context = React.createContext(new RootStore())
 const useStore = () => React.useContext(context)
 
 export { useStore }
