@@ -1,5 +1,5 @@
 import { Layout, Menu, Popconfirm } from 'antd'
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import {
     HomeOutlined,
@@ -15,12 +15,22 @@ const { Header, Sider } = Layout
 
 const GeekLayout = () => {
     const { pathname } = useLocation()  // 获取当前路由路径，用于转换菜单高亮
-    const { userStore } = useStore()
+    const { userStore, loginStore } = useStore()
+
     useEffect(() => {
         try {
             userStore.getUserInfo()
         } catch { }
     }, [userStore])
+
+    // 退出登录
+    const navigate = useNavigate()
+    const onConfirm = () => {
+        // 删除token，跳回到登录
+        loginStore.Logout()
+        navigate('/login')
+    }
+
     return (
         <Layout>
             <Header className="header">
@@ -28,8 +38,10 @@ const GeekLayout = () => {
                 <div className="user-info">
                     <span className="user-name">{userStore.userInfo.name}</span>
                     <span className="user-logout">
-                        <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
-                            <LogoutOutlined /> 退出
+                        <Popconfirm
+                            onConfirm={onConfirm}
+                            title="是否确认退出？" okText="退出" cancelText="取消">
+                            <LogoutOutlined /> 退出登录
                         </Popconfirm>
                     </span>
                 </div>

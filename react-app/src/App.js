@@ -9,12 +9,13 @@ import { AuthComponent } from './components/AuthComponent';
 import Home from './pages/Home';
 import Publish from './pages/Publish';
 import Article from './pages/Article';
+import { HistoryRouter, history } from './utils/history'
 
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <HistoryRouter history={history}>
         <Routes>
           {/* Layout需要鉴权处理 */}
           <Route path='/*' element={
@@ -28,7 +29,7 @@ function App() {
           </Route>
           <Route path='/login' element={<Login />}></Route>
         </Routes>
-      </BrowserRouter>
+      </HistoryRouter>
     </div>
   );
 }
