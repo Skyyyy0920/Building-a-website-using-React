@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Table, Tag, Space } from 'antd'
+import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Table, Tag, Space, Popconfirm } from 'antd'
 import 'moment/locale/zh-cn'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import './index.scss'
@@ -8,6 +8,7 @@ import { values } from 'mobx'
 import img404 from '@/assets/error.png'
 import { useEffect, useState } from 'react'
 import { http } from '@/utils'
+import { history } from '@/utils/history'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -76,6 +77,16 @@ const Article = () => {
     })
   }
 
+  // 删除回调
+  const delArticle = async (data) => {
+    await http.delete(`/mp/articles/${data.id}`)
+    // 更新列表
+    setParams({
+      page: 1,
+      per_page: 10
+    })
+  }
+
   const columns = [
     {
       title: '封面',
@@ -116,13 +127,25 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
             <Button
               type="primary"
-              danger
               shape="circle"
-              icon={<DeleteOutlined />}
+              icon={<EditOutlined />}
+              onClick={() => history.push(`/publish?id=${data.id}`)}
             />
+            <Popconfirm
+              title="确认删除该条文章吗?"
+              onConfirm={() => delArticle(data)}
+              okText="确认"
+              cancelText="取消"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         )
       }
