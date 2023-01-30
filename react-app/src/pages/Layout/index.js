@@ -15,13 +15,14 @@ const { Header, Sider } = Layout
 
 const GeekLayout = () => {
     const { pathname } = useLocation()  // 获取当前路由路径，用于转换菜单高亮
-    const { userStore, loginStore } = useStore()
+    const { userStore, loginStore, channelStore } = useStore()
 
     useEffect(() => {
         try {
             userStore.getUserInfo()
+            channelStore.loadChannelList()
         } catch { }
-    }, [userStore])
+    }, [userStore, channelStore])
 
     // 退出登录
     const navigate = useNavigate()

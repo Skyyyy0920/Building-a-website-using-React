@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { observer } from 'mobx-react-lite'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Table, Tag, Space, Popconfirm } from 'antd'
 import 'moment/locale/zh-cn'
 import locale from 'antd/es/date-picker/locale/zh_CN'
@@ -9,20 +10,13 @@ import img404 from '@/assets/error.png'
 import { useEffect, useState } from 'react'
 import { http } from '@/utils'
 import { history } from '@/utils/history'
+import { useStore } from '@/store'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
-  // 频道列表管理
-  const [channels, setChannels] = useState([])
-  useEffect(() => {
-    async function fetchChannels() {
-      const res = await http.get('/channels')
-      setChannels(res.data.channels)
-    }
-    fetchChannels()
-  }, [])
+  const { channelStore } = useStore()
   // 筛选功能
   const onSearch = values => {
     const { status, channel_id, date } = values
@@ -183,7 +177,7 @@ const Article = () => {
               placeholder="请选择文章频道"
               style={{ width: 120 }}
             >
-              {channels.map(item => (
+              {channelStore.channelList.map(item => (
                 <Option key={item.id} value={item.id}>
                   {item.name}
                 </Option>
@@ -222,4 +216,4 @@ const Article = () => {
   )
 }
 
-export default Article
+export default observer(Article)
